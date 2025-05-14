@@ -93,6 +93,12 @@ const createAPIMetadata = async (req, res) => {
             }
             // store api definition file
             await apiDao.storeAPIFile(apiDefinitionFile, apiFileName, apiID, constants.DOC_TYPES.API_DEFINITION, t);
+            // Save MCP tools as schema definition if the API type is MCP
+            if (apiMetadata.apiInfo.apiType === constants.API_TYPE.MCP && req.body.schemaDefinition) {
+                const schemaDefinition = JSON.parse(req.body.schemaDefinition);
+                await apiDao.storeAPIFile(schemaDefinition, constants.FILE_NAME.SCHEMA_DEFINITION_FILE_NAME, apiID,
+                    constants.DOC_TYPES.SCHEMA_DEFINITION, t);
+            }
             apiMetadata.apiID = apiID;
         });
 
